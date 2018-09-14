@@ -35,61 +35,53 @@
 
         <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
         <script type="text/javascript">
- var toons = ["Dexter's Lab", "Rocket Power", "Doug", "Powerpuff Girls"];
+            var toons = ["Dexter's Lab", "Rocket Power", "Doug", "Powerpuff Girls"];
             function displayToon() {
-              
-                var toonChoice = $(this).attr("data-name");
-                var queryURL = "https://api.giphy.com/v1/gifs/search?api_key=iCsYMQ3gXPNtCbnKD8vcI4uEfNm1L66X&q=" + toonChoice + "&limit=10&offset=0&rating=PG&lang=en";;
 
+                var toonChoice = $(this).attr("data-name");
+                //var queryURL = "https://api.giphy.com/v1/gifs/search?api_key=iCsYMQ3gXPNtCbnKD8vcI4uEfNm1L66X&q=" + toonChoice + "&limit=10&offset=0&rating=PG&lang=en";
+                var queryURL = "http://api.giphy.com/v1/gifs/search?q=" + toonChoice + "&api_key=iCsYMQ3gXPNtCbnKD8vcI4uEfNm1L66X&limit=10";
                 $.ajax({
                     url: queryURL,
                     method: "GET"
                 }).then(function (response) {
                     console.log(response);
-                    $('#toons-view').prepend(("Rating: " + response.data.rating + "<br>" + '<img id="theImg" src=' + response.data.image_original_url + '/>'));
-                });
+                    var results = response.data;
+                    for (var i = 0; i < results.length; i++) {
+                        var toonDiv = $("<div>");
+                        var toonImage = $("<img>");
+                        var toonRating = $("<p>").text("Rating: " + results[i].rating);
+                        toonImage.attr("src", results[i].images.fixed_height.url);
+                        toonDiv.append(toonImage);
+                        toonDiv.append(toonRating)
+                        $('#toons-view').prepend(toonDiv);
 
+                    };
+                });
             }
 
             function renderButtons() {
 
                 $("#buttons-view").empty();
-                // Loops through the array of movies
                 for (var i = 0; i < toons.length; i++) {
-                    // Then dynamicaly generates buttons for each movie in the array
-                    // This code $("<button>") is all jQuery needs to create the beginning and end tag. (<button></button>)
                     var newButt = $("<button>");
-                    // Adds a class of movie to our button
                     newButt.addClass("cartoonButt");
-                    // Added a data-attribute
                     newButt.attr("data-name", toons[i]);
-                    // Provided the initial button text
                     newButt.text(toons[i]);
-                    // Added the button to the buttons-view div
                     $("#buttons-view").append(newButt);
                 }
             };
 
-            // This function handles events where the add movie button is clicked
             $("#add-cartoon").on("click", function (event) {
                 event.preventDefault();
-                // This line of code will grab the input from the textbox
                 var toonChoice = $("#cartoon-input").val().trim();
-
-                // The movie from the textbox is then added to our array
                 toons.push(toonChoice);
-
-                // Calling renderButtons which handles the processing of our movie array
                 renderButtons();
             });
 
-            // Adding click event listeners to all elements with a class of "movie"
+
             $(document).on("click", ".cartoonButt", displayToon);
-
-
-            // Calling the renderButtons function to display the intial buttons
             renderButtons();
-
         </script>
     </div>
 </body>

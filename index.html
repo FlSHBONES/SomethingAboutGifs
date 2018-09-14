@@ -53,12 +53,34 @@
                         var toonRating = $("<p>").text("Rating: " + results[i].rating);
                         toonImage.attr("src", results[i].images.fixed_height.url);
                         toonDiv.append(toonImage);
-                        toonDiv.append(toonRating)
+                        toonDiv.append(toonRating);
                         $('#toons-view').prepend(toonDiv);
 
+//currently, I can only get the gif to restart on click as opposed to freeze.  I need to add the "_s" to the hyperlink to create the "still state" but cant add it without issue.
+                        toonImage.attr("data-still", results[i].images.fixed_height.url);
+                        toonImage.attr("data-animate", results[i].images.fixed_height.url);
+                        toonImage.attr("data-state", "animate");
+                        toonImage.attr("class", "gif");
+                        $(".gif").on("click", function () {
+
+                            var state = $(this).attr("data-state");
+
+                            if (state === "still") {
+                                $(this).attr("src", $(this).attr("data-animate"));
+                                $(this).attr("data-state", "animate");
+                            } else {
+                                $(this).attr("src", $(this).attr("data-still"));
+                                $(this).attr("data-state", "still");
+                            }
+                        });
                     };
                 });
             }
+
+
+
+
+
 
             function renderButtons() {
 

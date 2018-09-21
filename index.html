@@ -40,7 +40,7 @@
 
                 var toonChoice = $(this).attr("data-name");
                 //var queryURL = "https://api.giphy.com/v1/gifs/search?api_key=iCsYMQ3gXPNtCbnKD8vcI4uEfNm1L66X&q=" + toonChoice + "&limit=10&offset=0&rating=PG&lang=en";
-                var queryURL = "http://api.giphy.com/v1/gifs/search?q=" + toonChoice + "&api_key=iCsYMQ3gXPNtCbnKD8vcI4uEfNm1L66X&limit=10";
+                var queryURL = "https://api.giphy.com/v1/gifs/search?q=" + toonChoice + "&api_key=iCsYMQ3gXPNtCbnKD8vcI4uEfNm1L66X&limit=10";
                 $.ajax({
                     url: queryURL,
                     method: "GET"
@@ -57,13 +57,13 @@
                         $('#toons-view').prepend(toonDiv);
 
 //currently, I can only get the gif to restart on click as opposed to freeze.  I need to add the "_s" to the hyperlink to create the "still state" but cant add it without issue.
-                        toonImage.attr("data-still", results[i].images.fixed_height.url);
+                        toonImage.attr("data-still", results[i].images.fixed_height_still.url);
                         toonImage.attr("data-animate", results[i].images.fixed_height.url);
-                        toonImage.attr("data-state", "animate");
+                        toonImage.attr("data-state", "still");
                         toonImage.attr("class", "gif");
                         $(".gif").on("click", function () {
 
-                            var state = $(this).attr("data-state");
+                            state = $(this).attr("data-state");
 
                             if (state === "still") {
                                 $(this).attr("src", $(this).attr("data-animate"));
@@ -71,8 +71,11 @@
                             } else {
                                 $(this).attr("src", $(this).attr("data-still"));
                                 $(this).attr("data-state", "still");
+
                             }
+                            
                         });
+                        
                     };
                 });
             }
